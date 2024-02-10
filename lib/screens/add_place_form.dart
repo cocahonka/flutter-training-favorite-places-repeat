@@ -1,7 +1,7 @@
 import 'package:favorite_places_repeat/scopes/place_bloc.dart';
 import 'package:favorite_places_repeat/scopes/place_scope.dart';
 import 'package:favorite_places_repeat/widgets/image_input.dart';
-import 'package:favorite_places_repeat/widgets/location.input.dart';
+import 'package:favorite_places_repeat/widgets/location_input.dart';
 import 'package:favorite_places_repeat/widgets/place_title_field.dart';
 import 'package:flutter/material.dart';
 
