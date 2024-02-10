@@ -59,11 +59,16 @@ class _PlacesScreenState extends State<PlacesScreen> {
             ConnectionState.active || ConnectionState.done => ListView.separated(
                 itemBuilder: (context, index) {
                   final place = snapshot.data![index];
-                  return ListTile(
-                    title: Text(place.title),
-                    subtitle: Text(place.address),
-                    leading: const CircleAvatar(),
-                    onTap: () => _openPlaceDetailsScreen(place),
+                  return Dismissible(
+                    key: ValueKey(place.id),
+                    onDismissed: (_) => _bloc.delete(place),
+                    background: ColoredBox(color: Theme.of(context).colorScheme.onPrimary),
+                    child: ListTile(
+                      title: Text(place.title),
+                      subtitle: Text(place.address),
+                      leading: const CircleAvatar(),
+                      onTap: () => _openPlaceDetailsScreen(place),
+                    ),
                   );
                 },
                 separatorBuilder: (_, __) => const Divider(),
