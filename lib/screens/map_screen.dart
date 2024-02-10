@@ -17,6 +17,8 @@ class _MapScreenState extends State<MapScreen> {
   late final YandexMapController _controller;
   late final LocationBloc _bloc;
 
+  final List<MapObject<dynamic>> _placemarks = [];
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -35,6 +37,21 @@ class _MapScreenState extends State<MapScreen> {
         ),
       ),
     );
+
+    setState(() {
+      _placemarks.add(
+        PlacemarkMapObject(
+          mapId: const MapObjectId('placemark'),
+          point: Point(
+            latitude: location.latitude,
+            longitude: location.longitude,
+          ),
+          icon: PlacemarkIcon.single(
+            PlacemarkIconStyle(image: BitmapDescriptor.fromAssetImage('lib/assets/place.png')),
+          ),
+        ),
+      );
+    });
   }
 
   @override
@@ -67,6 +84,7 @@ class _MapScreenState extends State<MapScreen> {
                   _controller = controller;
                   await _initMap(location);
                 },
+                mapObjects: _placemarks,
               ),
           };
         },
