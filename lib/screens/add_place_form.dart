@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:favorite_places_repeat/scopes/place_bloc.dart';
 import 'package:favorite_places_repeat/scopes/place_scope.dart';
 import 'package:favorite_places_repeat/widgets/image_input.dart';
@@ -18,6 +20,7 @@ class _AddPlaceFormState extends State<AddPlaceForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _title = '';
+  File? _photo;
 
   void _saveForm() {
     final formState = _formKey.currentState!;
@@ -44,9 +47,9 @@ class _AddPlaceFormState extends State<AddPlaceForm> {
           child: Column(
             children: [
               PlaceTitleField(onSaved: (value) => _title = value),
-              const Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: ImageInput(),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: ImageInput(onSaved: (value) => _photo = value),
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 16),
