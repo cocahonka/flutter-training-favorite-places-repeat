@@ -34,13 +34,17 @@ class PlaceRepository {
   }
 
   Future<List<Place>> read() async {
-    final file = await _localFile;
+    try {
+      final file = await _localFile;
 
-    final contents = await file.readAsString();
+      final contents = await file.readAsString();
 
-    final placesJson = (json.decode(contents) as Map<String, dynamic>)['data'] as List<dynamic>;
-    final places = placesJson.map((el) => Place.fromJson(el as Map<String, dynamic>)).toList();
+      final placesJson = (json.decode(contents) as Map<String, dynamic>)['data'] as List<dynamic>;
+      final places = placesJson.map((el) => Place.fromJson(el as Map<String, dynamic>)).toList();
 
-    return places;
+      return places;
+    } on PathNotFoundException {
+      return [];
+    }
   }
 }
