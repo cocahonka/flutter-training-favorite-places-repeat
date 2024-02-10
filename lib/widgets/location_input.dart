@@ -1,8 +1,11 @@
+import 'package:favorite_places_repeat/models/place.dart';
 import 'package:favorite_places_repeat/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
+  const LocationInput({required this.onSaved, super.key});
+
+  final ValueSetter<LatLng> onSaved;
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -13,7 +16,7 @@ class _LocationInputState extends State<LocationInput> {
     Navigator.of(context).push<void>(
       MaterialPageRoute(
         builder: (context) {
-          return const MapScreen(isSelecting: true);
+          return MapScreen(onSaved: widget.onSaved);
         },
       ),
     );

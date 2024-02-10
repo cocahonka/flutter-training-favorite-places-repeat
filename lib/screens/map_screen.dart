@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({required this.isSelecting, super.key});
+  const MapScreen({super.key, this.placeLocation, this.onSaved});
 
-  final bool isSelecting;
+  final LatLng? placeLocation;
+  final ValueSetter<LatLng>? onSaved;
+
+  bool get isSelecting => placeLocation == null;
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -16,13 +19,22 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late final YandexMapController _controller;
   late final LocationBloc _bloc;
+  late PlacemarkMapObject _placemark;
 
-  final List<MapObject<dynamic>> _placemarks = [];
+  var _loading = true;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _bloc = LocationScope.of(context)..loadLocation();
+
+    _placemark = PlacemarkMapObject(
+      mapId: const MapObjectId('placemark'),
+      point: const Point(latitude: 0, longitude: 0),
+      icon: PlacemarkIcon.single(
+        PlacemarkIconStyle(image: BitmapDescriptor.fromAssetImage('lib/assets/place.png')),
+      ),
+    );
   }
 
   Future<void> _initMap(LatLng location) async {
@@ -39,18 +51,13 @@ class _MapScreenState extends State<MapScreen> {
     );
 
     setState(() {
-      _placemarks.add(
-        PlacemarkMapObject(
-          mapId: const MapObjectId('placemark'),
-          point: Point(
-            latitude: location.latitude,
-            longitude: location.longitude,
-          ),
-          icon: PlacemarkIcon.single(
-            PlacemarkIconStyle(image: BitmapDescriptor.fromAssetImage('lib/assets/place.png')),
-          ),
+      _placemark = _placemark.copyWith(
+        point: Point(
+          latitude: location.latitude,
+          longitude: location.longitude,
         ),
       );
+      _loading = false;
     });
   }
 
@@ -60,6 +67,22 @@ class _MapScreenState extends State<MapScreen> {
       appBar: AppBar(
         title: Text(widget.isSelecting ? 'Pick your Location' : 'Your Location'),
       ),
+      floatingActionButton: widget.isSelecting
+          ? FloatingActionButton(
+              onPressed: _loading
+                  ? null
+                  : () {
+                      final point = _placemark.point;
+                      final location = (latitude: point.latitude, longitude: point.longitude);
+                      final method = widget.onSaved;
+                      if (method != null) {
+                        method(location);
+                      }
+                      Navigator.of(context).pop();
+                    },
+              child: const Icon(Icons.save),
+            )
+          : null,
       body: StreamBuilder(
         stream: _bloc.stream,
         builder: (context, snapshot) {
@@ -82,9 +105,16 @@ class _MapScreenState extends State<MapScreen> {
             EnabledLocationState(location: final location) => YandexMap(
                 onMapCreated: (controller) async {
                   _controller = controller;
-                  await _initMap(location);
+                  await _initMap(widget.placeLocation ?? location);
                 },
-                mapObjects: _placemarks,
+                onMapTap: widget.isSelecting
+                    ? (location) {
+                        setState(() {
+                          _placemark = _placemark.copyWith(point: location);
+                        });
+                      }
+                    : null,
+                mapObjects: [_placemark],
               ),
           };
         },
