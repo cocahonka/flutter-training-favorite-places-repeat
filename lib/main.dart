@@ -1,3 +1,4 @@
+import 'package:favorite_places_repeat/scopes/place_scope.dart';
 import 'package:favorite_places_repeat/screens/places_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,19 +12,21 @@ class FavoritePlacesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark().copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 255, 20, 120),
-          brightness: Brightness.dark,
-        ),
-        textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
-          titleLarge: GoogleFonts.ubuntuCondensed(
-            fontWeight: FontWeight.bold,
+    return PlaceScope(
+      child: MaterialApp(
+        theme: ThemeData.dark().copyWith(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 255, 20, 120),
+            brightness: Brightness.dark,
+          ),
+          textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
+            titleLarge: GoogleFonts.ubuntuCondensed(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
+        home: const PlacesScreen(),
       ),
-      home: const PlacesScreen(),
     );
   }
 }
