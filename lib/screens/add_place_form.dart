@@ -1,3 +1,8 @@
+import 'package:favorite_places_repeat/scopes/place_bloc.dart';
+import 'package:favorite_places_repeat/scopes/place_scope.dart';
+import 'package:favorite_places_repeat/widgets/image_input.dart';
+import 'package:favorite_places_repeat/widgets/location.input.dart';
+import 'package:favorite_places_repeat/widgets/place_title_field.dart';
 import 'package:flutter/material.dart';
 
 class AddPlaceForm extends StatefulWidget {
@@ -8,7 +13,22 @@ class AddPlaceForm extends StatefulWidget {
 }
 
 class _AddPlaceFormState extends State<AddPlaceForm> {
+  late final PlaceBloc _bloc;
+
   final _formKey = GlobalKey<FormState>();
+
+  String _title = '';
+
+  void _saveForm() {
+    final formState = _formKey.currentState!;
+    final isFormValid = formState.validate();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _bloc = PlaceScope.of(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,83 +38,24 @@ class _AddPlaceFormState extends State<AddPlaceForm> {
         title: const Text('Add new Place'),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                maxLength: 100,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  label: Text(
-                    'Title',
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
-                  ),
-                ),
+              PlaceTitleField(onSaved: (value) => _title = value),
+              const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: ImageInput(),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Container(
-                  height: 250,
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    ),
-                  ),
-                  child: TextButton.icon(
-                    label: const Text('Take Picture'),
-                    icon: const Icon(Icons.camera),
-                    onPressed: () {},
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Container(
-                  height: 180,
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    ),
-                  ),
-                  child: Text(
-                    'No location chosen',
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.place),
-                      label: const Text('Get Current Location'),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.map),
-                      label: const Text('Select on Map'),
-                    ),
-                  ],
-                ),
+              const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: LocationInput(),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: _saveForm,
                   icon: const Icon(Icons.add),
                   label: const Text('Add Place'),
                 ),
