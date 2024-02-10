@@ -10,6 +10,7 @@ class PlaceTitleField extends StatelessWidget {
     return TextFormField(
       maxLength: 100,
       keyboardType: TextInputType.text,
+      style: Theme.of(context).textTheme.titleSmall,
       decoration: InputDecoration(
         label: Text(
           'Title',
@@ -21,7 +22,7 @@ class PlaceTitleField extends StatelessWidget {
       ),
       validator: (value) {
         final trimmedValue = value?.trim();
-        if (trimmedValue == null || trimmedValue.length < 3) {
+        if (trimmedValue == null || trimmedValue.length <= 3) {
           return 'Title length must be greater than 3';
         }
         return null;

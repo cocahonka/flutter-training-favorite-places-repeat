@@ -23,6 +23,10 @@ class FavoritePlacesApp extends StatelessWidget {
             titleLarge: GoogleFonts.ubuntuCondensed(
               fontWeight: FontWeight.bold,
             ),
+            titleMedium: GoogleFonts.ubuntuCondensed(
+              fontWeight: FontWeight.bold,
+            ),
+            titleSmall: GoogleFonts.ubuntuCondensed(),
           ),
         ),
         home: const PlacesScreen(),
