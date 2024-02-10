@@ -1,6 +1,8 @@
+import 'package:favorite_places_repeat/models/place.dart';
 import 'package:favorite_places_repeat/scopes/place_bloc.dart';
 import 'package:favorite_places_repeat/scopes/place_scope.dart';
 import 'package:favorite_places_repeat/screens/add_place_form.dart';
+import 'package:favorite_places_repeat/screens/place_details.dart';
 import 'package:flutter/material.dart';
 
 class PlacesScreen extends StatefulWidget {
@@ -17,6 +19,14 @@ class _PlacesScreenState extends State<PlacesScreen> {
     Navigator.of(context).push<void>(
       MaterialPageRoute(
         builder: (_) => const AddPlaceForm(),
+      ),
+    );
+  }
+
+  void _openPlaceDetailsScreen(Place place) {
+    Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PlaceDetails(place: place),
       ),
     );
   }
@@ -53,6 +63,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
                     title: Text(place.title),
                     subtitle: Text(place.address),
                     leading: const CircleAvatar(),
+                    onTap: () => _openPlaceDetailsScreen(place),
                   );
                 },
                 separatorBuilder: (_, __) => const Divider(),
