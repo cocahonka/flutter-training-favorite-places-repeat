@@ -1,9 +1,23 @@
+import 'package:favorite_places_repeat/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 
-class LocationInput extends StatelessWidget {
-  const LocationInput({
-    super.key,
-  });
+class LocationInput extends StatefulWidget {
+  const LocationInput({super.key});
+
+  @override
+  State<LocationInput> createState() => _LocationInputState();
+}
+
+class _LocationInputState extends State<LocationInput> {
+  void _openMap() {
+    Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (context) {
+          return const MapScreen(isSelecting: true);
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +50,7 @@ class LocationInput extends StatelessWidget {
                 label: const Text('Get Current Location'),
               ),
               TextButton.icon(
-                onPressed: () {},
+                onPressed: _openMap,
                 icon: const Icon(Icons.map),
                 label: const Text('Select on Map'),
               ),
